@@ -1,8 +1,8 @@
 /*	Author: Charles Hong
  *  Partner(s) Name: N/A
  *	Lab Section: 022
- *	Assignment: Lab #11  Exercise #2
- *	Exercise Description: LCD "CS120B is Legend..." scroll
+ *	Assignment: Lab #11  Exercise #3
+ *	Exercise Description: Display keypad on LCD
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -108,7 +108,6 @@ task tasks[2];
 
 unsigned char keySymbol;
 unsigned char prevSymbol;
-unsigned char idx = 1;
 enum KeypadSM {keypad_start, wait, press} keypad_state;
 int KeypadTick(int state) {
     unsigned char prevSymbol = GetKeypadKey();
@@ -117,7 +116,6 @@ int KeypadTick(int state) {
         state = wait;
         keySymbol = '\0';
         prevSymbol = '\0';
-        idx = 1;
         break;
         case wait:
         if(prevSymbol=='\0') {
@@ -125,8 +123,6 @@ int KeypadTick(int state) {
         } else {
             state = press;
             keySymbol = prevSymbol;
-            idx = 1+((idx+1)%16);
-            LCD_Cursor(idx);
         }
         break;
         case press:
@@ -140,18 +136,20 @@ int KeypadTick(int state) {
     return state;
 }
 
-
-
+char string[] = "                 CS120B is Legend... wait for it DARY!";
+unsigned char strSz = 54;
+unsigned char idx = 0;
 enum DisplaySM {display_start, dis, d_wait} display_state;
 int DisplayTick(int state) {
     switch(state) {
         case display_start:
         state = d_wait;
         LCD_ClearScreen();
-        LCD_Cursor(1);
         break;
         case dis:
+        LCD_Cursor(1);
         LCD_WriteData(keySymbol);
+        LCD_Cursor(2);
         state = dis;
         break;
         case d_wait:
