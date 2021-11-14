@@ -106,43 +106,42 @@ unsigned char numTasks = 1;
 task tasks[1];
 
 
-// unsigned char keySymbol;
-// enum KeypadSM {keypad_start, action} keypad_state;
-// int KeypadTick(int state) {
-//     switch (state) {
-//         case keypad_start:
-//         state = action;
-//         keySymbol = '\0';
-//         break;
-//         case action:
-//         state = action;
-//         keySymbol = GetKeypadKey();
-//         break;
-//     }
-//     return state;
-// }
+unsigned char keySymbol;
+unsigned char prevSymbol;
+enum KeypadSM {keypad_start, wait, press} keypad_state;
+int KeypadTick(int state) {
+    unsigned char prevSymbol = GetKeypadKey();
+    switch (state) {
+        case keypad_start:
+        state = wait;
+        keySymbol = '\0';
+        prevSymbol = '\0';
+        break;
+        case wait:
+        if(prevSymbol=='\0') {
+            state = wait;
+        } else {
+            state = press;
+            keySymbol = prevSymbol;
+        }
+        break;
+        case press:
+        if(keySymbol==prevSymbol) {
+            state = press;
+        } else {
+            state = wait;
+        }
+        break;
+    }
+    return state;
+}
 
 char string[] = "                 CS120B is Legend... wait for it DARY!";
 unsigned char strSz = 54;
 unsigned char idx = 0;
 enum DisplaySM {display_start, scroll} display_state;
 int DisplayTick(int state) {
-    unsigned char temp[16];
-    unsigned char* ptr = temp;
-    switch(state) {
-        case display_start:
-        state = scroll;
-        idx = 0;
-        break;
-        case scroll:
-        for(int i = 0; i < 15; i++) {
-            temp[i] = string[(i+idx)%strSz];
-        }
-        temp[15] = '\0';
-        idx = (idx+1)%strSz;
-        break;
-    }
-    LCD_DisplayString(1,ptr);
+    
     return state;
 }
 int main(void) {
