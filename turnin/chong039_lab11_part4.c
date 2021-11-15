@@ -1,8 +1,8 @@
 /*	Author: Charles Hong
  *  Partner(s) Name: N/A
  *	Lab Section: 022
- *	Assignment: Lab #11  Exercise #2
- *	Exercise Description: LCD "CS120B is Legend..." scroll
+ *	Assignment: Lab #11  Exercise #4
+ *	Exercise Description: Overwrite displayed message
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
